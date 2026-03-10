@@ -1,0 +1,149 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usepackage{graphicx} % Required for inserting images
+\usepackage[english, bidi=basic, provide=*]{babel}
+
+% Set default font to Sans Serif
+
+% --- BEAMER THEME ---
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+
+\title[VR Experiment EDA]{Initial EDA Report}
+\subtitle{Headtracking Measures as Indicators of Depressive Symptoms \\ \small 360$^\circ$ VR Replication Study}
+\author{Ankita Porel, Piyush Kumar, Shriram R}
+\date{March 2026}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Dataset Overview \& Demographics}
+    \textbf{Inclusion \& Exclusion}
+    \begin{itemize}
+        \item Initial Sample: $N = 40$ college students.
+        \item Exclusion: 3 participants removed due to significant simulator sickness (VRISE $< 25$).
+        \item Final EDA Dataset: \textbf{$N = 37$}.
+    \end{itemize}
+
+    \vspace{0.5cm}
+    \textbf{Demographics (N=37)}
+    \begin{itemize}
+        \item \textbf{Age:} $M = 22.89$ ($SD = 1.82$), Range: 19--27.
+        \item \textbf{Gender:} 33 Male / 4 Female.
+        \item \textbf{VR Experience:} Generally low ($M = 1.41$ on a 2-point scale).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Mental Health Score Distributions}
+    \begin{columns}
+        \column{0.4\textwidth}
+        \begin{itemize}
+            \item \textbf{PHQ-9:} Right-skewed ($M=5.81$). Sample is mostly in "Minimal" to "Mild" ranges.
+            \item \textbf{GAD-7:} Matches depression skew ($M=5.11$).
+            \item \textbf{STAI-T:} Shows wider variance ($SD=14.6$).
+        \end{itemize}
+
+        \column{0.6\textwidth}
+        \begin{figure}[htbp]
+          \centering
+          \includegraphics[width=0.9\textwidth]{eda_plot1_distributions.png}
+        \end{figure}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Variable Covariance Analysis}
+    \begin{columns}
+        \column{0.4\textwidth}
+        \textbf{Key Correlations:}
+        \begin{itemize}
+            \item \textbf{PHQ-9 \& GAD-7:} Strong positive correlation ($r=0.612$).
+            \item \textbf{PHQ-9 \& STAI-T:} Strong positive correlation ($r=0.617$).
+        \end{itemize}
+        \vspace{0.5cm}
+        \textit{Takeaway:} Anxiety must be treated as a covariate in future inferential models to isolate depressive psychomotor effects.
+
+        \column{0.6\textwidth}
+        \begin{figure}[htbp]
+          \centering
+          \includegraphics[width=0.9\textwidth]{eda_plot2_correlations.png}
+        \end{figure}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Subjective Affective Responses}
+    \begin{columns}
+        \column{0.4\textwidth}
+        \textbf{Video Subjective Ratings}
+        \begin{itemize}
+            \item \textbf{Valence:} V2 (Beach) and V5 (Tahiti) rated highly pleasant. V4 (Nun) rated highly unpleasant.
+            \item \textbf{Arousal:} V4 elicited the highest arousal spikes.
+            \item Emotional manipulation via 360$^\circ$ video environments was successful.
+        \end{itemize}
+
+        \column{0.6\textwidth}
+        \begin{figure}[htbp]
+          \centering
+          \includegraphics[width=0.9\textwidth]{eda_plot3_video_subjective.png}
+        \end{figure}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Objective Psychomotor Behavior by Video}
+    \begin{columns}
+        \column{0.4\textwidth}
+        \textbf{Behavioral Shifts}
+        \begin{itemize}
+            \item \textbf{V1 (Abandoned):} Highest active exploration (Speed $M=39.6$).
+            \item \textbf{V4 (Nun Horror):} Induced a "freezing" effect; lowest speed ($24.8$) and highly restricted Yaw scanning ($SD=33.9$).
+            \item \textbf{V2/V5 (Water):} High horizontal scanning, low vertical variance.
+        \end{itemize}
+
+        \column{0.6\textwidth}
+        \begin{figure}[htbp]
+          \centering
+          \includegraphics[width=0.9\textwidth]{eda_plot4_headtracking_by_video.png}
+        \end{figure}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Controlling for False Discovery Rate (FDR) -- Benjamini-Hochberg}
+    \begin{itemize}
+        \item Instead of controlling the probability of making \textit{even one} false positive (FWER), FDR controls the \textbf{expected proportion of false discoveries} among all significant results.
+        \item Ideal for \textbf{exploratory science} (like this VR study), as it preserves statistical power while still keeping error rates in check.
+    \end{itemize}
+
+    \vspace{0.4cm}
+    \textbf{The Benjamini-Hochberg (B-H) Procedure:}
+    \begin{enumerate}
+        \item \textbf{Rank} all $m$ obtained $p$-values from smallest to largest: $P_{(1)} \dots P_{(m)}$
+        \item \textbf{Calculate} the B-H critical value for each test: $\frac{i}{m} \times Q$ \\
+        \item \textbf{Evaluate:} Find the largest $p$-value that is smaller than its corresponding critical value. That test, and \textbf{all tests ranked above it}, are deemed statistically significant.
+    \end{enumerate}
+
+    \vspace{0.4cm}
+    \begin{alertblock}{Why not Bonferroni?}
+        Bonferroni ($\alpha/m$) is too stringent and assumes tests are independent. B-H provides a more nuanced, powerful threshold for highly correlated data (e.g., repeated headtracking measures).
+    \end{alertblock}
+\end{frame}
+
+
+\begin{frame}{Conclusion \& Next Steps}
+    \textbf{Summary of EDA}
+    \begin{enumerate}
+        \item Sample is strictly non-clinical but shows expected mental health score distributions.
+        \item Headtracking metrics (Speed, Pitch, Yaw) are highly sensitive to the VR environment presented.
+    \end{enumerate}
+
+    \vspace{0.5cm}
+    \textbf{Next Phases of Analysis}
+    \begin{itemize}
+        \item \textbf{Repeated Measures ANOVA} to test for significant differences in headtracking across the different video environments.
+        \item Apply the \textbf{Benjamini-Hochberg (B-H) correction} to all resulting $p$-values to safely control the False Discovery Rate across our multiple comparisons.
+    \end{itemize}
+\end{frame}
+
+\end{document}
